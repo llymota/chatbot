@@ -88,7 +88,7 @@ else
 fi 
 
 # Clone the repository if not already cloned
-REPO_URL="https://github.com"
+REPO_URL="https://github.com/llymota/chatbot.git"
 REPO_DIR="/chatbot" # Same name as repository
 
 if [ -d "$REPO_DIR" ]; then
