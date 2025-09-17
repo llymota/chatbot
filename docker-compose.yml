@@ -1,0 +1,41 @@
+version: '3.9'
+services:
+  # Traefik Service
+  traefik:
+    container_name: traefik
+    hostname: traefik
+    image: traefik:latest
+    restart: unless-stopped
+    ports:
+      - 8001:80
+      - 44301:443
+      - 8181:8080
+    environment:
+      SSL_CERTIFICATION_EMAIL: ${$CLOUDFLARE_EMAIL}
+      DOMAIN: ${DOMAIN}
+    depends_on:
+      - dockersocket
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/:/etc/traefik/
+    networks:
+      - chatbot
+
+  # Docker Socket Proxy Service
+  dockersocket:
+    container_name: dockersocket
+    image: tecnativa/docker-socket-proxy
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      POST: 0
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - chatbot
+
+networks:
+  chatbot:
+    driver: bridge
+    external: true

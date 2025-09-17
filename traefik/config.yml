@@ -1,0 +1,122 @@
+http:
+
+  ############ --- Routers --- ############
+  routers:
+
+    # Traefik Dashboard routing
+    traefik:
+      entryPoints:
+        - https
+      rule: "Host(`traefik.$DOMAIN`)"
+      service: traefik
+      middlewares:
+        - "securityHeaders"
+        
+    # n8n routing
+    n8n:
+      entryPoints:
+        - https
+      rule: "Host(`n8n.$DOMAIN`)"
+      service: n8n
+      middlewares:
+        - "securityHeaders"
+
+    # Typebot Builder routing
+    typebot-builder:
+      entryPoints:
+        - https
+      rule: "Host(`typebot.$DOMAIN`)"
+      service: typebot-builder
+      middlewares:
+        - "securityHeaders"
+
+    # Typebot Viewer routing
+    typebot-viewer:
+      entryPoints:
+        - https
+      rule: "Host(`bot.$DOMAIN`)"
+      service: typebot-viewer
+      middlewares:
+        - "securityHeaders"            
+
+    # Supabase Kong routing
+    supabase-kong:
+      entryPoints:
+        - https
+      rule: "Host(`studio.$DOMAIN`)"
+      service: supabase-kong
+      middlewares:
+        - "securityHeaders"
+
+    # Supabase Analytics routing
+    supabase-analytics:
+      entryPoints:
+        - https
+      rule: "Host(`analytics.$DOMAIN`)"
+      service: supabase-analytics
+      middlewares:
+        - "securityHeaders"
+
+
+  ############ --- Services --- ############
+  services:
+
+    # Traefik service
+    traefik:
+      loadBalancer:
+        servers:
+          - url: http://$IPV4:8181
+
+    # n8n service
+    n8n:
+      loadBalancer:
+        servers:
+          - url: "http://IPv4:5678"
+
+    # Typebot Builder service
+    typebot-builder:
+      loadbalancer:
+        servers:
+          - url: "http://IPv4:7777"
+
+    # Typebot Viewer service
+    typebot-viewer:
+      loadbalancer:
+        servers:
+          - url: "http://IPv4:7778"                  
+
+    # Supabase Kong service
+    supabase-kong:
+      loadbalancer:
+        servers:
+          - url: "http://IPv4:8000"
+
+    # Supabase Analytics service
+    supabase-analytics:
+      loadbalancer:
+        servers:
+          - url: "http://IPv4:4000"
+
+
+  ############ --- Middlewares --- ############
+  middlewares:
+
+    # Security headers
+    securityHeaders:
+      headers:
+        customResponseHeaders:
+          X-Robots-Tag: "none,noarchive,nosnippet,notranslate,noimageindex"
+          server: ""
+        sslProxyHeaders:
+          X-Forwarded-Proto: https
+        referrerPolicy: "same-origin"
+        hostsProxyHeaders:
+          - "X-Forwarded-Host"
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        contentTypeNosniff: true
+        browserXssFilter: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsSeconds: 63072000
+        stsPreload: true
