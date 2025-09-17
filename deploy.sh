@@ -3,23 +3,23 @@
 # Exit on error, undefined vars, pipe failures
 set -euo pipefail
 
-echo "🚀 Starting setup script..."
+echo -e "\n🚀  Starting setup script...\n"
 
 # check if is running as root
 if [ "$(id -u)" != "0" ]; then
-    echo "⛔ This script must be run as root" >&2
+    echo -e "⛔  This script must be run as root\n" >&2
     exit 1
 fi
 
 # check if is Mac OS
 if [ "$(uname)" = "Darwin" ]; then
-    echo "⛔ This script must be run on Linux" >&2
+    echo -e "⛔  This script must be run on Linux\n" >&2
     exit 1
 fi
 
 # check if is running inside a container
 if [ -f /.dockerenv ]; then
-    echo "⛔ This script must be run on Linux" >&2
+    echo -e "⛔  This script must be run on Linux\n" >&2
     exit 1
 fi
 
@@ -27,7 +27,7 @@ fi
 check_port() {
     local port=$1
     if ss -tulnp | grep ":$port " >/dev/null; then
-        echo "⛔ Error: something is already running on port $port" >&2
+        echo -e "⛔  Error: something is already running on port $port\n" >&2
         return 1
     fi
 }
@@ -42,118 +42,120 @@ command_exists() {
 
 # Install Docker if not installed
 if command_exists docker; then
-  echo "✅ Docker already installed"
+  echo -e "✅  Docker already installed\n"
 else
-  echo "⌛ Installing Docker..."
+  echo -e "⌛  Installing Docker...\n"
   curl -sSL https://get.docker.com | sh
 
   if ! command_exists docker; then
-    echo "⛔ Docker installation failed" >&2
+    echo -e "⛔  Docker installation failed\n" >&2
     exit 1
   fi
 
-  echo "✅ Docker installed successfully"
+  echo -e "✅  Docker installed successfully\n"
 fi
 
 # Install Docker-compose if not installed
 if command_exists docker-compose; then
-  echo "✅ Docker-compose already installed"
+  echo -e "✅  Docker-compose already installed\n"
 else
-  echo "⌛ Installing Docker Compose Plugin..."
+  echo -e "⌛  Installing Docker Compose Plugin...\n"
   apt-get update  
-  apt-get install -y docker-compose-plugin
+  apt-get install -y docker-compose
 
   if ! command_exists docker-compose; then
-    echo "⛔ Docker Compose installation failed" >&2
+    echo -e "⛔  Docker Compose installation failed\n" >&2
     exit 1
   fi
 
-  echo "✅ Docker Compose installed successfully"
+  echo -e "✅  Docker Compose installed successfully\n"
 fi  
 
 # Install Git if not installed
 if command_exists git; then
-  echo "✅ Git already installed"
+  echo -e "✅  Git already installed\n"
 else
-  echo "⌛ Installing Git..."
+  echo -e "⌛  Installing Git...\n"
   apt-get update
   apt-get install -y git 
 
   if ! command_exists git; then
-    echo "⛔ Git installation failed" >&2
+    echo -e "⛔  Git installation failed\n" >&2
     exit 1
   fi
 
-  echo "✅ Git installed successfully"
+  echo -e "✅  Git installed successfully\n"
 fi 
 
 # Clone the repository if not already cloned
 REPO_URL="https://github.com/llymota/chatbot.git"
-REPO_DIR="/chatbot" # Same name as repository
+REPO_DIR="chatbot" # Same name as repository
 
 if [ -d "$REPO_DIR" ]; then
-  echo "✅ Repository already cloned at $REPO_DIR"
+  echo -e "✅  Repository already cloned at $REPO_DIR\n"
 
-  echo "⌛ Pulling latest changes..."
+  echo -e "⌛  Pulling latest changes...\n"
   cd "$REPO_DIR"
   git pull origin main
   cd - > /dev/null
-  echo "✅ Repository updated successfully"
+  echo -e "\n✅  Repository updated successfully\n"
 else
-  echo "⌛ Cloning repository..."
+  echo -e "⌛  Cloning repository...\n"
   git clone "$REPO_URL"
 
   if [ ! -d "$REPO_DIR" ]; then
-    echo "⛔ Repository cloning failed" >&2
+    echo -e "⛔  Repository cloning failed\n" >&2
     exit 1
   fi
 
-  echo "✅ Repository cloned successfully"
+  echo -e "✅  Repository cloned successfully\n"
 fi
 
 # Create Docker network if it doesn't exist
 NETWORK_NAME="chatbot"
 if docker network ls --format '{{.Name}}' | grep -qw "$NETWORK_NAME"; then
-    echo "✅ Docker network '$NETWORK_NAME' already exists"
+    echo -e "✅  Docker network '$NETWORK_NAME' already exists\n"
 else
-    echo "⌛ Creating Docker network '$NETWORK_NAME'..."
+    echo -e "⌛  Creating Docker network '$NETWORK_NAME'...\n"
     docker network create --driver bridge "$NETWORK_NAME"
     
     if ! docker network ls --format '{{.Name}}' | grep -qw "$NETWORK_NAME"; then
-      echo "⛔ Docker network creation failed" >&2   
+      echo -e "⛔  Docker network creation failed\n" >&2   
       exit 1
     fi
 
-    echo "✅ Docker network created"
+    echo -e "\n✅  Docker network created\n"
 fi
 
 # Create .env file if it doesn't exist
 ENV_FILE="$REPO_DIR/.env"
 if [ -f "$ENV_FILE" ]; then
-  echo "✅ .env file already exists"
+  echo -e "✅  .env file already exists\n"
   read -p "Do you want to edit the existing .env file? (y/N): " -n 1 -r
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]; then
       nano "$ENV_FILE"
-      echo "✅ .env file updated successfully"
+      echo -e "✅  .env file updated successfully\n"
   fi
 else
   # Create .env file
-  echo "⚡ Creating .env file..."
+  echo -e "⚡  Creating .env file...\n"
   touch "$ENV_FILE"
 
   # Open .env file in nano editor for input environment variables
-  echo "📝 Please enter your environment variables in the editor. Save and exit when done."
+  echo -e "📝  Please enter your environment variables in the editor. Save and exit when done.\n"
   nano "$ENV_FILE"
-  echo "✅ .env file saved successfully"
+  echo -e "✅  .env file saved successfully\n"
 
   # Validate .env file is not empty
   if [ ! -s "$ENV_FILE" ]; then
-    echo "⚠️ Warning: .env file is empty"
+    echo -e "⚠️  Warning: .env file is empty\n"
   fi
 fi
 
-echo "🚀 Starting all services..."
+echo -e "\n🚀  Starting all services...\n"
+
+cd "$REPO_DIR"
 
 # Function to start a docker-compose service
 start_compose() {
@@ -161,18 +163,18 @@ start_compose() {
     local service_name=$2
 
     if [ -f "$compose_file" ]; then
-        echo "⚡ Starting $service_name..."
-        cd "$REPO_DIR"
+        echo -e "⚡  Starting $service_name...\n"
+        
         docker-compose -f "$compose_file" up -d
+        
         if [ $? -eq 0 ]; then
-            echo "✅ $service_name started successfully"
+            echo -e "⌛  $service_name starting...\n"
         else
-            echo "⛔ Failed to start $service_name" >&2
+            echo -e "⛔  Failed to start $service_name\n" >&2
             exit 1
         fi
-        cd - > /dev/null
     else
-        echo "⛔ Compose file not found: $compose_file" >&2
+        echo -e "⛔  Compose file not found: $compose_file\n" >&2
         exit 1
     fi
 }
@@ -184,18 +186,18 @@ wait_for_container() {
     local interval=5
     local elapsed=0
 
-    echo "🕓 Waiting for '$service_name' container to be up..."
+    echo -e "🕓  Waiting for '$service_name' container to be up...\n"
 
     while ! docker ps --format '{{.Names}}' | grep -qwi "$service_name"; do
         sleep $interval
         elapsed=$((elapsed + interval))
         if [ "$elapsed" -ge "$timeout" ]; then
-            echo "⛔ Timeout reached: '$service_name' did not start in expected time." >&2
+            echo -e "⛔  Timeout reached: '$service_name' did not start in expected time.\n" >&2
             exit 1
         fi
     done
 
-    echo "✅ '$service_name' is now running."
+    echo -e "✅  '$service_name' is now running.\n"
 }
 
 # Start Traefik
@@ -214,5 +216,8 @@ wait_for_container "n8n"
 start_compose "typebot/docker-compose.typebot.yml" "typebot"
 wait_for_container "typebot"
 
-echo "🚩 All services started successfully"
-echo "🎉 Setup script completed successfully"
+echo -e "🚩  All services started successfully\n"
+
+cd - > /dev/null
+
+echo -e "🎉  Setup script completed successfully\n"

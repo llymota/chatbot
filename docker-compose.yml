@@ -11,7 +11,7 @@ services:
       - 44301:443
       - 8181:8080
     environment:
-      SSL_CERTIFICATION_EMAIL: ${$CLOUDFLARE_EMAIL}
+      SSL_CERTIFICATION_EMAIL: ${$SSL_CERTIFICATION_EMAIL}
       DOMAIN: ${DOMAIN}
     depends_on:
       - dockersocket
