@@ -12,6 +12,7 @@ services:
       NODE_ENV: production
       WEBHOOK_URL: https://${N8N_SUBDOMAIN}.${DOMAIN_NAME}/
       GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: true
       
       # PostgreSQL Configuration
       DB_TYPE: postgresdb
