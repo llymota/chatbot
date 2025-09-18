@@ -13,6 +13,8 @@ services:
     container_name: supabase-studio
     image: supabase/studio:2025.06.30-sha-6f5982d
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     healthcheck:
@@ -55,6 +57,8 @@ services:
     container_name: supabase-kong
     image: kong:2.8.1
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot  
     ports:
@@ -85,6 +89,8 @@ services:
     container_name: supabase-auth
     image: supabase/gotrue:v2.177.0
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot  
     healthcheck:
@@ -170,6 +176,8 @@ services:
     container_name: supabase-rest
     image: postgrest/postgrest:v12.2.12
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     depends_on:
@@ -196,6 +204,8 @@ services:
     container_name: realtime-dev.supabase-realtime
     image: supabase/realtime:v2.34.47
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     depends_on:
@@ -243,6 +253,8 @@ services:
     container_name: supabase-storage
     image: supabase/storage-api:v1.25.7
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     volumes:
@@ -288,6 +300,8 @@ services:
     container_name: supabase-imgproxy
     image: darthsim/imgproxy:v3.8.0
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     volumes:
@@ -312,6 +326,8 @@ services:
     container_name: supabase-meta
     image: supabase/postgres-meta:v0.91.0
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     depends_on:
@@ -332,6 +348,8 @@ services:
     container_name: supabase-edge-functions
     image: supabase/edge-runtime:v1.69.6
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     volumes:
@@ -358,6 +376,8 @@ services:
     container_name: supabase-analytics
     image: supabase/logflare:1.14.2
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     ports:
@@ -409,6 +429,8 @@ services:
     container_name: supabase-db
     image: supabase/postgres:15.8.1.060
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot  
     volumes:
@@ -468,6 +490,8 @@ services:
     container_name: supabase-vector
     image: timberio/vector:0.28.1-alpine
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot    
     volumes:
@@ -501,6 +525,8 @@ services:
     container_name: supabase-pooler
     image: supabase/supavisor:2.5.7
     restart: unless-stopped
+    env_file:
+      - .env
     networks:
       - chatbot  
     ports:
