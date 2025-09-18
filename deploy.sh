@@ -416,7 +416,7 @@ update_env() {
             echo -e "\n📂  Found: $env_file"
             # flush any leftover input
             read -r -t 0.1 -n 10000 discard
-            read -p "Do you want to edit this file? (y/N): " -n 1 -r
+            read -p "Do you want to edit this file? (y/N): " -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
                 echo -e "⌛  Opening $env_file...\n"
