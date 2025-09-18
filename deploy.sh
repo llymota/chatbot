@@ -413,8 +413,8 @@ update_env() {
     
     for env_file in "${env_files[@]}"; do
         if [ -f "$env_file" ]; then
-            echo -e "📂  Found: $env_file"
-            read -p "Do you want to edit this file? (y/N): " -r
+            echo -e "\n📂  Found: $env_file"
+            read -p "Do you want to edit this file? (y/N): " -n 1 -r REPLY
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
                 echo -e "⌛  Opening $env_file...\n"
