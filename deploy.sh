@@ -186,18 +186,18 @@ wait_for_container() {
     local interval=5
     local elapsed=0
 
-    echo -e "🕓  Waiting for '$service_name' container to be up...\n"
+    echo -e "🕓  Waiting for $service_name container to be up...\n"
 
     while ! docker ps --format '{{.Names}}' | grep -qwi "$service_name"; do
         sleep $interval
         elapsed=$((elapsed + interval))
         if [ "$elapsed" -ge "$timeout" ]; then
-            echo -e "⛔  Timeout reached: '$service_name' did not start in expected time.\n" >&2
+            echo -e "⛔  Timeout reached: $service_name did not start in expected time.\n" >&2
             exit 1
         fi
     done
 
-    echo -e "✅  '$service_name' is now running.\n"
+    echo -e "✅  $service_name is now running.\n"
 }
 
 # Start Traefik

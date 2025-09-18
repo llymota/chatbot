@@ -28,6 +28,8 @@ services:
     volumes:
       - n8n-data:/home/node/.n8n
       - /local-files:/files
+    networks:
+      - chatbot
     env_file:
       - ../.env
 

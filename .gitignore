@@ -1,1 +1,3 @@
+supabase/volumes/db
+supabase/volumes/storage
 .env

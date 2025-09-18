@@ -23,7 +23,6 @@ services:
     ports:
       - 7777:3000
     restart: unless-stopped
-    env_file: .env
     environment:
       REDIS_URL: redis://typebot-redis:6379
     depends_on:
@@ -41,7 +40,6 @@ services:
     ports:
       - 7778:3000
     restart: unless-stopped
-    env_file: .env
     environment:
       REDIS_URL: redis://typebot-redis:6379
     depends_on:
