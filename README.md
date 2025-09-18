@@ -29,3 +29,8 @@ curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash 
 ```sh
 curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash -s update-env
 ```
+
+**🤝Help**
+```sh
+curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash -s help
+```
