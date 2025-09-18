@@ -262,30 +262,51 @@ down() {
     echo -e "🎉  All services stopped successfully\n"
 }
 
+# Function to check container status
+check_container() {
+    local compose_file=$1
+    local service_name=$2
+    
+    if [ -f "$compose_file" ]; then
+        echo -e "⌛  Checking status of $service_name...\n"
+        
+        # Get container status (running, exited, restarting, etc.)
+        local status
+        status=$(docker compose -f "$compose_file" ps --status=running --status=restarting | grep "$service_name" | awk '{print $4}')
+        
+        if [[ "$status" == "running" ]]; then
+            echo -e "✅  $service_name is already running. Skipping...\n"
+            return 0
+            elif [[ "$status" == "restarting" ]]; then
+            echo -e "⚠️  $service_name is in restarting state. Please check logs.\n"
+            return 1
+        fi
+    fi
+}
+
+# Function to start a service
+start_service() {
+    local compose_file=$1
+    local service_name=$2
+    
+    if [ -f "$compose_file" ]; then
+        echo -e "⌛  Starting $service_name...\n"
+        
+        docker compose -f "$compose_file" up -d
+        if [ $? -eq 0 ]; then
+            echo -e "\n✅  $service_name started successfully\n"
+        else
+            echo -e "\n⛔  Failed to start $service_name\n" >&2
+            return 1
+        fi
+    else
+        echo -e "\n⚠️  Compose file not found: $compose_file\n"
+    fi
+}
+
 # Start all services
 up() {
     echo -e "\n🚀  Starting docker compose up script...\n"
-    
-    check_container(){
-        local compose_file=$1
-        local service_name=$2
-        
-        if [ -f "$compose_file" ]; then
-            echo -e "⌛  Checking status of $service_name...\n"
-            
-            # Get container status (running, exited, restarting, etc.)
-            local status
-            status=$(docker compose -f "$compose_file" ps --status=running --status=restarting | grep "$service_name" | awk '{print $4}')
-            
-            if [[ "$status" == "running" ]]; then
-                echo -e "✅  $service_name is already running. Skipping...\n"
-                return 0
-                elif [[ "$status" == "restarting" ]]; then
-                echo -e "⚠️  $service_name is in restarting state. Please check logs.\n"
-                return 1
-            fi
-        fi
-    }
     
     check_container "docker-compose.yml" "traefik"
     check_container "supabase/docker-compose.supabase.yml" "supabase"
@@ -311,27 +332,6 @@ up() {
         git pull origin main
         echo -e "\n✅  Repository updated successfully\n"
     fi
-    
-    # Function to start a service
-    start_service() {
-        local compose_file=$1
-        local service_name=$2
-        
-        if [ -f "$compose_file" ]; then
-            echo -e "⌛  Starting $service_name...\n"
-            
-            docker compose -f "$compose_file" up -d
-            
-            if [ $? -eq 0 ]; then
-                echo -e "\n✅  $service_name started successfully\n"
-            else
-                echo -e "\n⛔  Failed to start $service_name\n" >&2
-                return 1
-            fi
-        else
-            echo -e "\n⚠️  Compose file not found: $compose_file\n"
-        fi
-    }
     
     # Start all services
     start_service "docker-compose.yml" "traefik"
@@ -448,17 +448,17 @@ help() {
 
 if [ $# -eq 0 ]; then
     deploy
-elif [ "$1" = "stop" ] || [ "$1" = "down" ]; then
+    elif [ "$1" = "stop" ] || [ "$1" = "down" ]; then
     down
-elif [ "$1" = "up" ] || [ "$1" = "start" ]; then
+    elif [ "$1" = "up" ] || [ "$1" = "start" ]; then
     up
-elif [ "$1" = "restart" ]; then
+    elif [ "$1" = "restart" ]; then
     restart
-elif [ "$1" = "update-env" ]; then
+    elif [ "$1" = "update-env" ]; then
     update_env
-elif [ "$1" = "reset" ]; then
+    elif [ "$1" = "reset" ]; then
     reset
-elif [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+    elif [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     help
 else
     echo "\n❌  Unknown command: $1"
