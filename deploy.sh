@@ -149,7 +149,7 @@ start_compose() {
     if [ -f "$compose_file" ]; then
         echo -e "⚡  Starting $service_name...\n"
         
-        docker compose -f "$compose_file" up -d
+        docker compose --env-file "$REPO_DIR/.env" -f "$compose_file" up -d
         
         if [ $? -eq 0 ]; then
             echo -e "\n⌛  $service_name starting...\n"

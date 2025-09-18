@@ -28,8 +28,6 @@ services:
       - /local-files:/files
     networks:
       - chatbot
-    env_file:
-      - .env  
 
 volumes:
   n8n-data:
