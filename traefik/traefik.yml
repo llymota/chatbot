@@ -43,7 +43,6 @@ providers:
   docker:
     watch: true
     network: chatbot
-    swarmModeRefreshSeconds: 15s
     exposedByDefault: false
 
 # Generate SSL certificates

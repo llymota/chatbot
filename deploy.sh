@@ -113,31 +113,38 @@ deploy() {
         echo -e "\n✅  Docker network created\n"
     fi
     
-    # Create .env file if it doesn't exist
-    ENV_FILE="$REPO_DIR/.env"
-    if [ -f "$ENV_FILE" ]; then
-        echo -e "✅  .env file already exists\n"
-        read -p "Do you want to edit the existing .env file? (y/N): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
+    # Update or create ENV files for all services
+    ENV_FILES=(
+        "$REPO_DIR/.env"
+        "$REPO_DIR/n8n/.env"
+        "$REPO_DIR/supabase/.env"
+        "$REPO_DIR/typebot/.env"
+    )
+    
+    for ENV_FILE in "${ENV_FILES[@]}"; do
+        if [ -f "$ENV_FILE" ]; then
+            echo -e "✅  Found existing .env: $ENV_FILE"
+            read -p "Do you want to edit this file? (y/N): " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                nano "$ENV_FILE"
+                echo -e "✅  Updated: $ENV_FILE\n"
+            else
+                echo -e "⏭️  Skipping: $ENV_FILE\n"
+            fi
+        else
+            echo -e "⚡  Creating .env file: $ENV_FILE\n"
+            mkdir -p "$(dirname "$ENV_FILE")"
+            touch "$ENV_FILE"
+            echo -e "📝  Please enter your environment variables in the editor. Save and exit when done.\n"
             nano "$ENV_FILE"
-            echo -e "✅  .env file updated successfully\n"
+            echo -e "✅  Created: $ENV_FILE\n"
+            
+            if [ ! -s "$ENV_FILE" ]; then
+                echo -e "⚠️  Warning: $ENV_FILE is empty\n"
+            fi
         fi
-    else
-        # Create .env file
-        echo -e "⚡  Creating .env file...\n"
-        touch "$ENV_FILE"
-        
-        # Open .env file in nano editor for input environment variables
-        echo -e "📝  Please enter your environment variables in the editor. Save and exit when done.\n"
-        nano "$ENV_FILE"
-        echo -e "✅  .env file saved successfully\n"
-        
-        # Validate .env file is not empty
-        if [ ! -s "$ENV_FILE" ]; then
-            echo -e "⚠️  Warning: .env file is empty\n"
-        fi
-    fi
+    done
     
     echo -e "\n🚀  Starting all services...\n"
     
@@ -280,7 +287,7 @@ up() {
             fi
         fi
     }
-
+    
     check_container "docker-compose.yml" "traefik"
     check_container "supabase/docker-compose.supabase.yml" "supabase"
     check_container "n8n/docker-compose.n8n.yml" "n8n"
@@ -390,6 +397,40 @@ reset() {
     echo -e "\n🚀  Starting reset script...\n"
 }
 
+# Update ENV files
+update_env() {
+    echo -e "\n🚀  Starting update ENV script...\n"
+    
+    REPO_DIR="chatbot"
+    
+    # List of env files to update
+    env_files=(
+        "$REPO_DIR/.env"
+        "$REPO_DIR/n8n/.env"
+        "$REPO_DIR/supabase/.env"
+        "$REPO_DIR/typebot/.env"
+    )
+    
+    for env_file in "${env_files[@]}"; do
+        if [ -f "$env_file" ]; then
+            echo -e "\n📂  Found: $env_file"
+            read -p "Do you want to edit this file? (y/N): " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                echo -e "⌛  Opening $env_file...\n"
+                nano "$env_file"
+                echo -e "✅  Updated: $env_file\n"
+            else
+                echo -e "⏭️  Skipping: $env_file\n"
+            fi
+        else
+            echo -e "⚠️  File not found: $env_file\n"
+        fi
+    done
+    
+    echo -e "🎉  ENV update process completed\n"
+}
+
 ###   >>  Script execution starts here  <<   ###
 
 if [ "$1" = "stop" || "$1" = "down" ]; then
@@ -401,6 +442,10 @@ if [ "$1" = "up" || "$1" = "start" ]; then
 fi
 
 if [ "$1" = "restart" ]; then
+    restart
+fi
+
+if [ "$1" = "update-env" ]; then
     restart
 fi
 
