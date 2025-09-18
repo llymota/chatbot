@@ -413,9 +413,7 @@ update_env() {
     
     for env_file in "${env_files[@]}"; do
         if [ -f "$env_file" ]; then
-            echo -e "\n📂  Found: $env_file"
-            # flush any leftover input
-            read -r -t 0.1 -n 10000 discard
+            echo -e "📂  Found: $env_file"
             read -p "Do you want to edit this file? (y/N): " -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
