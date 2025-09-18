@@ -7,7 +7,7 @@ http:
     traefik:
       entryPoints:
         - https
-      rule: "Host(`traefik.$DOMAIN`)"
+      rule: "Host(`traefik.${DOMAIN}`)"
       service: traefik
       middlewares:
         - "securityHeaders"
@@ -16,7 +16,7 @@ http:
     n8n:
       entryPoints:
         - https
-      rule: "Host(`n8n.$DOMAIN`)"
+      rule: "Host(`n8n.${DOMAIN}`)"
       service: n8n
       middlewares:
         - "securityHeaders"
@@ -25,7 +25,7 @@ http:
     typebot-builder:
       entryPoints:
         - https
-      rule: "Host(`typebot.$DOMAIN`)"
+      rule: "Host(`typebot.${DOMAIN}`)"
       service: typebot-builder
       middlewares:
         - "securityHeaders"
@@ -34,7 +34,7 @@ http:
     typebot-viewer:
       entryPoints:
         - https
-      rule: "Host(`bot.$DOMAIN`)"
+      rule: "Host(`bot.${DOMAIN}`)"
       service: typebot-viewer
       middlewares:
         - "securityHeaders"            
@@ -43,7 +43,7 @@ http:
     supabase-kong:
       entryPoints:
         - https
-      rule: "Host(`supabase.$DOMAIN`)"
+      rule: "Host(`supabase.${DOMAIN}`)"
       service: supabase-kong
       middlewares:
         - "securityHeaders"
@@ -52,7 +52,7 @@ http:
     supabase-analytics:
       entryPoints:
         - https
-      rule: "Host(`analytics.supabase.$DOMAIN`)"
+      rule: "Host(`analytics.supabase.${DOMAIN}`)"
       service: supabase-analytics
       middlewares:
         - "securityHeaders"
