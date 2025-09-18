@@ -5,7 +5,7 @@
 curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash
 ```
 
-**⚡Start**
+**⚡Up**
 ```sh
 curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash -s up
 ```
