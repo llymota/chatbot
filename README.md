@@ -2,27 +2,27 @@
 
 **⚡Deploy**
 ```sh
-curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash
+bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh)
 ```
 
 **⚡Up**
 ```sh
-curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash -s up
+bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) up
 ```
 
 **⚡Down**
 ```sh
-curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash -s down
+bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) down
 ```
 
 **⚡Restart**
 ```sh
-curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash -s restart
+bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) restart
 ```
 
 **⚡Reset**
 ```sh
-curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh | bash -s reset
+bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) reset
 ```
 
 **⚡Update-ENV**

@@ -262,25 +262,34 @@ down() {
     echo -e "🎉  All services stopped successfully\n"
 }
 
-# Function to check container status
-check_container() {
+# Function to check and stop container if running
+check_and_stop_container() {
     local compose_file=$1
     local service_name=$2
     
     if [ -f "$compose_file" ]; then
         echo -e "⌛  Checking status of $service_name...\n"
         
-        # Get container status (running, exited, restarting, etc.)
-        local status
-        status=$(docker compose -f "$compose_file" ps --status=running --status=restarting | grep "$service_name" | awk '{print $4}')
+        # Check if any containers are running or restarting
+        local running_count
+        local restarting_count
         
-        if [[ "$status" == "running" ]]; then
-            echo -e "✅  $service_name is already running. Skipping...\n"
-            return 0
-            elif [[ "$status" == "restarting" ]]; then
-            echo -e "⚠️  $service_name is in restarting state. Please check logs.\n"
-            return 1
+        running_count=$(docker compose -f "$compose_file" ps --status=running --quiet | wc -l)
+        restarting_count=$(docker compose -f "$compose_file" ps --status=restarting --quiet | wc -l)
+        
+        if [[ "$running_count" -gt 0 ]] || [[ "$restarting_count" -gt 0 ]]; then
+            echo -e "\n🛑  $service_name is running/restarting. Stopping...\n"
+            docker compose -f "$compose_file" down
+            if [ $? -eq 0 ]; then
+                echo -e "\n✅  $service_name stopped successfully\n"
+            else
+                echo -e "\n⚠️  Warning: Failed to stop $service_name cleanly\n"
+            fi
+        else
+            echo -e "✅  $service_name is already stopped\n"
         fi
+    else
+        echo -e "⚠️  Compose file not found: $compose_file\n"
     fi
 }
 
@@ -301,6 +310,7 @@ start_service() {
         fi
     else
         echo -e "\n⚠️  Compose file not found: $compose_file\n"
+        return 1
     fi
 }
 
@@ -308,24 +318,36 @@ start_service() {
 up() {
     echo -e "\n🚀  Starting docker compose up script...\n"
     
-    check_container "docker-compose.yml" "traefik"
-    check_container "supabase/docker-compose.supabase.yml" "supabase"
-    check_container "n8n/docker-compose.n8n.yml" "n8n"
-    check_container "typebot/docker-compose.typebot.yml" "typebot"
-    
     REPO_URL="https://github.com/llymota/chatbot.git"
     REPO_DIR="chatbot"
     
     # Check if repository exists
     if [ ! -d "$REPO_DIR" ]; then
-        echo -e "\n⛔  Repository directory not found: $REPO_DIR\n" >&2
-        echo -e "    Please run the deploy script first.\n" >&2
+        echo -e "⛔  Repository directory not found: $REPO_DIR\n" >&2
+        echo -e "   Please run the deploy script first.\n" >&2
         exit 1
     fi
     
     cd "$REPO_DIR"
     
-    read -p "Do you want to pull latest code? (y/N): " -n 1 -r
+    echo -e "🛑  Stopping all running services first...\n"
+    
+    # Stop all services if they're running
+    check_and_stop_container "docker-compose.yml" "traefik"
+    check_and_stop_container "supabase/docker-compose.supabase.yml" "supabase"
+    check_and_stop_container "n8n/docker-compose.n8n.yml" "n8n"
+    check_and_stop_container "typebot/docker-compose.typebot.yml" "typebot"
+    
+    echo -e "✅  All services stopped\n"
+    
+    # Ask about pulling latest code
+    local REPLY=""
+    if [[ -t 0 ]]; then
+        read -p "Do you want to pull latest code? (y/N): " -n 1 -r REPLY
+        elif [[ -c /dev/tty ]]; then
+        read -p "Do you want to pull latest code? (y/N): " -n 1 -r REPLY < /dev/tty
+    fi
+    
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo -e "⌛  Pulling latest changes...\n"
@@ -333,7 +355,9 @@ up() {
         echo -e "\n✅  Repository updated successfully\n"
     fi
     
-    # Start all services
+    echo -e "\n🚀  Starting all services fresh...\n"
+    
+    # Start all services fresh
     start_service "docker-compose.yml" "traefik"
     start_service "supabase/docker-compose.supabase.yml" "supabase"
     start_service "n8n/docker-compose.n8n.yml" "n8n"
