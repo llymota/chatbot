@@ -26,9 +26,9 @@ entryPoints:
       tls:
         certResolver: letsencrypt
         domains:
-          - main: $DOMAIN
+          - main: miimicry.com
             sans:
-              - '*.$DOMAIN'
+              - '*.miimicry.com'
       middlewares:
         - securityHeaders@file
 
