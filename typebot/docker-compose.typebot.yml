@@ -24,8 +24,6 @@ services:
     depends_on:
       typebot-redis:
         condition: service_healthy
-      typebot-db:
-        condition: service_healthy
     networks:
       - chatbot 
 
@@ -38,8 +36,6 @@ services:
       REDIS_URL: redis://typebot-redis:6379
     depends_on:
       typebot-redis:
-        condition: service_healthy
-      typebot-db:
         condition: service_healthy
     networks:
       - chatbot   
