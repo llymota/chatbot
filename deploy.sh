@@ -403,28 +403,36 @@ update_env() {
     
     REPO_DIR="chatbot"
     
-    if [ -f "$REPO_DIR/.env" ]; then
-        echo -e "\n📂  Found: $REPO_DIR/.env"
-        echo "helllo"
-        read -p "Do you want to edit this file? (y/N): " -n 1 -r REPLY
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            echo -e "⌛  Opening $REPO_DIR/.env...\n"
-            nano "$REPO_DIR/.env"
-            echo -e "✅  Updated: $REPO_DIR/.env\n"
+    # List of env files to update
+    env_files=(
+        "$REPO_DIR/.env"
+        "$REPO_DIR/n8n/.env"
+        "$REPO_DIR/supabase/.env"
+        "$REPO_DIR/typebot/.env"
+    )
+    
+    for env_file in "${env_files[@]}"; do
+        if [ -f "$env_file" ]; then
+            echo -e "\n📂  Found: $env_file"
+            read -p "Do you want to edit this file? (y/N): " -n 1 -r REPLY
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                nano "$env_file"
+                echo -e "\n✅  Updated: $env_file\n"
+            else
+                echo -e "\n⏭️  Skipping: $env_file\n"
+            fi
         else
-            echo -e "⏭️  Skipping: $REPO_DIR/.env\n"
+            echo -e "\n⚠️  File not found: $env_file\n"
         fi
-    else
-        echo -e "⚠️  File not found: $REPO_DIR/.env\n"
-    fi
+    done
     
     echo -e "🎉  ENV update process completed\n"
 }
 
 # Show usage information
 help() {
-    echo "\n🚩  Usage: $0 [COMMAND]"
+    echo -e "\n🚩  Usage: $0 [COMMAND]"
     echo ""
     echo "Commands:"
     echo "  🔸  deploy         Run the full deployment (default)"
