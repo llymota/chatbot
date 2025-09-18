@@ -403,16 +403,9 @@ update_env() {
     
     REPO_DIR="chatbot"
     
-    # List of env files to update
-    env_files=(
-        "$REPO_DIR/.env"
-        "$REPO_DIR/n8n/.env"
-        "$REPO_DIR/supabase/.env"
-        "$REPO_DIR/typebot/.env"
-    )
-    
     if [ -f "$REPO_DIR/.env" ]; then
         echo -e "\n📂  Found: $REPO_DIR/.env"
+        echo "helllo"
         read -p "Do you want to edit this file? (y/N): " -n 1 -r REPLY
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -431,7 +424,7 @@ update_env() {
 
 # Show usage information
 help() {
-    echo "🚩  Usage: $0 [COMMAND]"
+    echo "\n🚩  Usage: $0 [COMMAND]"
     echo ""
     echo "Commands:"
     echo "  🔸  deploy         Run the full deployment (default)"
@@ -448,21 +441,21 @@ help() {
 
 if [ $# -eq 0 ]; then
     deploy
-    elif [ "$1" = "stop" ] || [ "$1" = "down" ]; then
+elif [ "$1" = "stop" ] || [ "$1" = "down" ]; then
     down
-    elif [ "$1" = "up" ] || [ "$1" = "start" ]; then
+elif [ "$1" = "up" ] || [ "$1" = "start" ]; then
     up
-    elif [ "$1" = "restart" ]; then
+elif [ "$1" = "restart" ]; then
     restart
-    elif [ "$1" = "update-env" ]; then
+elif [ "$1" = "update-env" ]; then
     update_env
-    elif [ "$1" = "reset" ]; then
+elif [ "$1" = "reset" ]; then
     reset
-    elif [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+elif [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     help
 else
     echo "❌  Unknown command: $1"
     echo ""
-    show_usage
+    help
     exit 1
 fi
