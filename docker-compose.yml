@@ -1,5 +1,3 @@
-name: "traefik"
-
 services:
   # Traefik Service
   traefik:
