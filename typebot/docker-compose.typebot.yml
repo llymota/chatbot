@@ -15,8 +15,6 @@ services:
       - redis-data:/data
     networks:
       - chatbot
-    env_file:
-      - ../.env  
 
   typebot-builder:
     image: baptistearno/typebot-builder:latest
@@ -31,9 +29,7 @@ services:
       typebot-db:
         condition: service_healthy
     networks:
-      - chatbot
-    env_file:
-      - ../.env    
+      - chatbot 
 
   typebot-viewer:
     image: baptistearno/typebot-viewer:latest
@@ -48,9 +44,7 @@ services:
       typebot-db:
         condition: service_healthy
     networks:
-      - chatbot  
-    env_file:
-      - ../.env  
+      - chatbot   
 
 volumes:
   redis-data:

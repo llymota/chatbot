@@ -55,22 +55,6 @@ else
   echo -e "✅  Docker installed successfully\n"
 fi
 
-# Install Docker-compose if not installed
-if command_exists docker-compose; then
-  echo -e "✅  Docker-compose already installed\n"
-else
-  echo -e "⌛  Installing Docker Compose Plugin...\n"
-  apt-get update  
-  apt-get install -y docker-compose
-
-  if ! command_exists docker-compose; then
-    echo -e "⛔  Docker Compose installation failed\n" >&2
-    exit 1
-  fi
-
-  echo -e "✅  Docker Compose installed successfully\n"
-fi  
-
 # Install Git if not installed
 if command_exists git; then
   echo -e "✅  Git already installed\n"
@@ -165,10 +149,10 @@ start_compose() {
     if [ -f "$compose_file" ]; then
         echo -e "⚡  Starting $service_name...\n"
         
-        docker-compose -f "$compose_file" up -d
+        docker compose -f "$compose_file" up -d
         
         if [ $? -eq 0 ]; then
-            echo -e "⌛  $service_name starting...\n"
+            echo -e "\n⌛  $service_name starting...\n"
         else
             echo -e "⛔  Failed to start $service_name\n" >&2
             exit 1
