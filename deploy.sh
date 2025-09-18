@@ -123,20 +123,19 @@ deploy() {
     
     for ENV_FILE in "${ENV_FILES[@]}"; do
         if [ -f "$ENV_FILE" ]; then
-            echo -e "✅  Found existing .env: $ENV_FILE"
+            echo -e "📂  Found: $ENV_FILE"
             read -p "Do you want to edit this file? (y/N): " -n 1 -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
                 nano "$ENV_FILE"
-                echo -e "✅  Updated: $ENV_FILE\n"
+                echo -e "\n✅  Updated: $ENV_FILE\n"
             else
-                echo -e "⏭️  Skipping: $ENV_FILE\n"
+                echo -e "\n⏭️  Skipping: $ENV_FILE\n"
             fi
         else
             echo -e "⚡  Creating .env file: $ENV_FILE\n"
             mkdir -p "$(dirname "$ENV_FILE")"
             touch "$ENV_FILE"
-            echo -e "📝  Please enter your environment variables in the editor. Save and exit when done.\n"
             nano "$ENV_FILE"
             echo -e "✅  Created: $ENV_FILE\n"
             
@@ -462,7 +461,7 @@ elif [ "$1" = "reset" ]; then
 elif [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     help
 else
-    echo "❌  Unknown command: $1"
+    echo "\n❌  Unknown command: $1"
     echo ""
     help
     exit 1
