@@ -411,22 +411,20 @@ update_env() {
         "$REPO_DIR/typebot/.env"
     )
     
-    for env_file in "${env_files[@]}"; do
-        if [ -f "$env_file" ]; then
-            echo -e "\n📂  Found: $env_file"
-            read -p "Do you want to edit this file? (y/N): " -n 1 -r REPLY
-            echo
-            if [[ $REPLY =~ ^[Yy]$ ]]; then
-                echo -e "⌛  Opening $env_file...\n"
-                nano "$env_file"
-                echo -e "✅  Updated: $env_file\n"
-            else
-                echo -e "⏭️  Skipping: $env_file\n"
-            fi
+    if [ -f "$REPO_DIR/.env" ]; then
+        echo -e "\n📂  Found: $REPO_DIR/.env"
+        read -p "Do you want to edit this file? (y/N): " -n 1 -r REPLY
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo -e "⌛  Opening $REPO_DIR/.env...\n"
+            nano "$REPO_DIR/.env"
+            echo -e "✅  Updated: $REPO_DIR/.env\n"
         else
-            echo -e "⚠️  File not found: $env_file\n"
+            echo -e "⏭️  Skipping: $REPO_DIR/.env\n"
         fi
-    done
+    else
+        echo -e "⚠️  File not found: $REPO_DIR/.env\n"
+    fi
     
     echo -e "🎉  ENV update process completed\n"
 }
