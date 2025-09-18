@@ -43,7 +43,7 @@ http:
     supabase-kong:
       entryPoints:
         - https
-      rule: "Host(`studio.$DOMAIN`)"
+      rule: "Host(`supabase.$DOMAIN`)"
       service: supabase-kong
       middlewares:
         - "securityHeaders"
@@ -52,7 +52,7 @@ http:
     supabase-analytics:
       entryPoints:
         - https
-      rule: "Host(`analytics.$DOMAIN`)"
+      rule: "Host(`analytics.supabase.$DOMAIN`)"
       service: supabase-analytics
       middlewares:
         - "securityHeaders"
