@@ -13,7 +13,7 @@ api:
 # Define entry points
 entryPoints:
   http:
-    address: :8001
+    address: :80
     http:
       redirections:
         entryPoint:
@@ -21,7 +21,7 @@ entryPoints:
           scheme: https
 
   https:
-    address: :44301
+    address: :443
     http:
       tls:
         certResolver: letsencrypt

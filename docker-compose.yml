@@ -6,8 +6,8 @@ services:
     image: traefik:latest
     restart: unless-stopped
     ports:
-      - 8001:80
-      - 44301:443
+      - 80:80
+      - 443:443
       - 8181:8080
     environment:
       SSL_CERTIFICATION_EMAIL: ${SSL_CERTIFICATION_EMAIL}
