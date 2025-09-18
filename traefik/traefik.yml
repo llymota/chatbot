@@ -49,7 +49,7 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: "{{env 'SSL_CERTIFICATION_EMAIL'}}"
+      email: '{{env "SSL_CERTIFICATION_EMAIL"}}'
       storage: /etc/traefik/acme.json
       httpChallenge:
         entryPoint: http
