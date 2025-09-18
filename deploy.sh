@@ -450,7 +450,7 @@ if [ "$1" = "update-env" ]; then
 fi
 
 if [ "$1" = "reset" ]; then
-    reset
+    update_env
 else
     deploy
 fi
