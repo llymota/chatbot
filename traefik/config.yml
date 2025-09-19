@@ -100,6 +100,12 @@ http:
 
   ############ --- Middlewares --- ############
   middlewares:
+    
+    # Authentication middleware
+    dashboard-auth:
+      basicAuth:
+        users:
+          - "VekrroDev:$1$E1AUd/..$WkhL3WJMOhbz7wybAaRsj0"
 
     # Security headers
     securityHeaders:
