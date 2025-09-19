@@ -1,5 +1,8 @@
 #!/bin/bash
 
+REPO_DIR="chatbot"
+REPO_URL="https://github.com/llymota/chatbot.git"
+
 # Exit on error, undefined vars, pipe failures
 set -euo pipefail
 
@@ -72,10 +75,6 @@ deploy() {
         
         echo -e "✅  Git installed successfully\n"
     fi
-    
-    # Clone the repository if not already cloned
-    REPO_URL="https://github.com/llymota/chatbot.git"
-    REPO_DIR="chatbot" # Same name as repository
     
     if [ -d "$REPO_DIR" ]; then
         echo -e "✅  Repository already cloned at $REPO_DIR\n"
@@ -191,11 +190,15 @@ deploy() {
         
         echo -e "✅  $service_name is now running.\n"
     }
-    
+
     # Start Traefik
     start_compose "docker-compose.yml" "traefik"
     wait_for_container "traefik"
-    
+
+    # Start Redis
+    start_compose "redis/docker-compose.redis.yml" "redis"
+    wait_for_container "redis"
+
     # Start Supabase
     start_compose "supabase/docker-compose.supabase.yml" "supabase"
     wait_for_container "supabase"
@@ -218,8 +221,6 @@ deploy() {
 # Stop all services
 down() {
     echo -e "\n🚀  Starting docker compose down script...\n"
-    
-    REPO_DIR="chatbot"
     
     # Check if repository exists
     if [ ! -d "$REPO_DIR" ]; then
@@ -255,6 +256,7 @@ down() {
     stop_service "typebot/docker-compose.typebot.yml" "typebot"
     stop_service "n8n/docker-compose.n8n.yml" "n8n"
     stop_service "supabase/docker-compose.supabase.yml" "supabase"
+    stop_service "redis/docker-compose.redis.yml" "redis"
     stop_service "docker-compose.yml" "traefik"
     
     cd - > /dev/null
@@ -317,10 +319,7 @@ start_service() {
 # Start all services
 up() {
     echo -e "\n🚀  Starting docker compose up script...\n"
-    
-    REPO_URL="https://github.com/llymota/chatbot.git"
-    REPO_DIR="chatbot"
-    
+
     # Check if repository exists
     if [ ! -d "$REPO_DIR" ]; then
         echo -e "⛔  Repository directory not found: $REPO_DIR\n" >&2
@@ -334,6 +333,7 @@ up() {
     
     # Stop all services if they're running
     check_and_stop_container "docker-compose.yml" "traefik"
+    check_and_stop_container "redis/docker-compose.redis.yml" "redis"
     check_and_stop_container "supabase/docker-compose.supabase.yml" "supabase"
     check_and_stop_container "n8n/docker-compose.n8n.yml" "n8n"
     check_and_stop_container "typebot/docker-compose.typebot.yml" "typebot"
@@ -359,6 +359,7 @@ up() {
     
     # Start all services fresh
     start_service "docker-compose.yml" "traefik"
+    start_service "redis/docker-compose.redis.yml" "redis"
     start_service "supabase/docker-compose.supabase.yml" "supabase"
     start_service "n8n/docker-compose.n8n.yml" "n8n"
     start_service "typebot/docker-compose.typebot.yml" "typebot"
@@ -371,9 +372,7 @@ up() {
 # Restart all services
 restart() {
     echo -e "\n🚀  Starting restart script...\n"
-    
-    REPO_DIR="chatbot"
-    
+
     # Check if repository exists
     if [ ! -d "$REPO_DIR" ]; then
         echo -e "\n⛔  Repository directory not found: $REPO_DIR\n" >&2
@@ -406,6 +405,7 @@ restart() {
     
     # Restart all services
     restart_service "docker-compose.yml" "traefik"
+    restart_service "redis/docker-compose.redis.yml" "redis"
     restart_service "supabase/docker-compose.supabase.yml" "supabase"
     restart_service "n8n/docker-compose.n8n.yml" "n8n"
     restart_service "typebot/docker-compose.typebot.yml" "typebot"
@@ -423,9 +423,7 @@ reset() {
 # Update ENV files
 update_env() {
     echo -e "\n🚀  Starting update ENV script...\n"
-    
-    REPO_DIR="chatbot"
-    
+
     # List of env files to update
     env_files=(
         "$REPO_DIR/.env"

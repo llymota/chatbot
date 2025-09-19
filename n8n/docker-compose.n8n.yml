@@ -5,25 +5,8 @@ services:
     restart: unless-stopped
     ports:
       - "5678:5678"
-    environment:
-      N8N_HOST: ${N8N_SUBDOMAIN}.${DOMAIN_NAME}
-      N8N_PORT: 5678
-      N8N_PROTOCOL: https
-      NODE_ENV: production
-      WEBHOOK_URL: https://${N8N_SUBDOMAIN}.${DOMAIN_NAME}/
-      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
-      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: true
-      
-      # PostgreSQL Configuration
-      DB_TYPE: postgresdb
-      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB}
-      DB_POSTGRESDB_HOST: ${POSTGRES_HOST}
-      DB_POSTGRESDB_PORT: ${POSTGRES_PORT}
-      DB_POSTGRESDB_USER: postgres
-      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
-
-      # Security
-      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+    env_file:
+      - .env
     volumes:
       - n8n-data:/home/node/.n8n
       - /local-files:/files

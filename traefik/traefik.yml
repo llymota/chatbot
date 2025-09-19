@@ -25,10 +25,6 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
-        # domains:
-        #   - main: miimicry.com
-        #     sans:
-        #       - '*.miimicry.com'
       middlewares:
         - securityHeaders@file
 
@@ -49,7 +45,7 @@ providers:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: "bhavyshekhaliya245@gmail.com"
+      email: "bhavyshekhaliya245@gmail.com" # 📌
       storage: /etc/traefik/acme.json
       httpChallenge:
         entryPoint: http

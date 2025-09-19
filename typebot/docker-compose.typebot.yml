@@ -1,29 +1,11 @@
 services:
-  typebot-redis:
-    image: redis:alpine
-    restart: unless-stopped
-    command: --save 60 1 --loglevel warning
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      start_period: 20s
-      interval: 30s
-      retries: 5
-      timeout: 3s
-    volumes:
-      - redis-data:/data
-    networks:
-      - chatbot
-
   typebot-builder:
     image: baptistearno/typebot-builder:latest
     ports:
       - 7777:3000
     restart: unless-stopped
-    environment:
-      REDIS_URL: redis://typebot-redis:6379
-    depends_on:
-      typebot-redis:
-        condition: service_healthy
+    env_file:
+      - .env
     networks:
       - chatbot 
 
@@ -32,16 +14,10 @@ services:
     ports:
       - 7778:3000
     restart: unless-stopped
-    environment:
-      REDIS_URL: redis://typebot-redis:6379
-    depends_on:
-      typebot-redis:
-        condition: service_healthy
+    env_file:
+      - .env
     networks:
       - chatbot   
-
-volumes:
-  redis-data:
 
 networks:
   chatbot:
