@@ -145,6 +145,10 @@ deploy() {
     done
     
     echo -e "\n🚀  Starting all services...\n"
+
+    # Required Redis Configration
+    echo 'vm.overcommit_memory = 1' | sudo tee -a /etc/sysctl.conf
+    sudo sysctl -p
     
     cd "$REPO_DIR"
     
@@ -741,7 +745,7 @@ if [ $# -eq 0 ]; then
     elif [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     help
 else
-    echo "\n❌  Unknown command: $1"
+    echo -e "\n❌  Unknown command: $1"
     echo ""
     help
     exit 1
