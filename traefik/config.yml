@@ -10,19 +10,7 @@ http:
       rule: "Host(`traefik.{{env "DOMAIN"}}`)"
       service: traefik
       middlewares:
-        - "dashboard-auth"
         - "securityHeaders"
-
-    traefik-api:
-      entryPoints:
-        - https
-      rule: "Host(`traefik.{{env "DOMAIN"}}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      service: api@internal
-      middlewares:
-        - "dashboard-auth"
-        - "securityHeaders"
-      tls:
-        certResolver: letsencrypt
         
     # n8n routing
     n8n:
@@ -112,12 +100,6 @@ http:
 
   ############ --- Middlewares --- ############
   middlewares:
-    
-    # Authentication middleware
-    dashboard-auth:
-      basicAuth:
-        users:
-          - "VekrroDev:$1$OfGAKzt8$4zo1G.ujJiHKv38PlhDkt/"
 
     # Security headers
     securityHeaders:

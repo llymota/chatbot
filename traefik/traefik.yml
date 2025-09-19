@@ -7,8 +7,8 @@ serversTransport:
 
 # Enable traefik UI
 api:
-  dashboard: true
-  insecure: false
+  dashboard: false
+  insecure: true
 
 # Define entry points
 entryPoints:
