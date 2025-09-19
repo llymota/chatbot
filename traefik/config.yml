@@ -65,37 +65,37 @@ http:
     traefik:
       loadBalancer:
         servers:
-          - url: "http://31.97.203.130:8181"
+          - url: "http://31.97.203.130:8181" # 🚩
 
     # n8n service
     n8n:
       loadBalancer:
         servers:
-          - url: "http://31.97.203.130:5678"
+          - url: "http://31.97.203.130:5678" # 🚩
 
     # Typebot Builder service
     typebot-builder:
       loadbalancer:
         servers:
-          - url: "http://31.97.203.130:7777"
+          - url: "http://31.97.203.130:7777" # 🚩
 
     # Typebot Viewer service
     typebot-viewer:
       loadbalancer:
         servers:
-          - url: "http://31.97.203.130:7778"                  
+          - url: "http://31.97.203.130:7778" # 🚩                   
 
     # Supabase Kong service
     supabase-kong:
       loadbalancer:
         servers:
-          - url: "http://31.97.203.130:8000"
+          - url: "http://31.97.203.130:8000" # 🚩
 
     # Supabase Analytics service
     supabase-analytics:
       loadbalancer:
         servers:
-          - url: "http://31.97.203.130:4000"
+          - url: "http://31.97.203.130:4000" # 🚩
 
 
   ############ --- Middlewares --- ############
