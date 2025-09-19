@@ -106,7 +106,7 @@ http:
     dashboard-auth:
       basicAuth:
         users:
-          - "VekrroDev:$1$E1AUd/..$WkhL3WJMOhbz7wybAaRsj0"
+          - "VekrroDev:$1$OfGAKzt8$4zo1G.ujJiHKv38PlhDkt/"
 
     # Security headers
     securityHeaders:
