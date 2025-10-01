@@ -41,8 +41,8 @@ services:
     depends_on:
       # db:
       #   condition: service_healthy
-      rest:
-        condition: service_started
+      # rest:
+      #   condition: service_started
       imgproxy:
         condition: service_started
       minio:
