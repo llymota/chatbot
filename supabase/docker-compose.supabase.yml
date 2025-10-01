@@ -260,7 +260,7 @@ services:
 
   meta:
     container_name: supabase-meta
-    image: supabase/postgres-meta:latest
+    image: supabase/postgres-meta
     restart: unless-stopped
     networks:
       - chatbot    
