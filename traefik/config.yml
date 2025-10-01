@@ -57,6 +57,24 @@ http:
       middlewares:
         - "securityHeaders"
 
+    # Minio routing
+    minio:
+      entryPoints:
+        - https
+      rule: "Host(`minio.{{env "DOMAIN"}}`)"
+      service: minio
+      middlewares:
+        - "securityHeaders"
+
+    # Minio API routing
+    minio-api:
+      entryPoints:
+        - https
+      rule: "Host(`api.minio.{{env "DOMAIN"}}`)"
+      service: minio-api
+      middlewares:
+        - "securityHeaders"        
+
 
   ############ --- Services --- ############
   services:
@@ -96,6 +114,18 @@ http:
       loadbalancer:
         servers:
           - url: "http://31.97.203.130:4000" # 🚩
+
+    # Minio Service
+    minio:
+      loadbalancer:
+        servers:
+          - url: "http://31.97.203.130:9001" # 🚩
+
+    # Minio API service
+    minio-api:
+      loadbalancer:
+        servers:
+          - url: "http://31.97.203.130:9000" # 🚩
 
 
   ############ --- Middlewares --- ############

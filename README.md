@@ -5,6 +5,11 @@
 bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh)
 ```
 
+**⚡Update-ENV**
+```sh
+bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) update-env
+```
+
 **⚡Up**
 ```sh
 bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) up
@@ -23,11 +28,6 @@ bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh)
 **⚡Reset**
 ```sh
 bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) reset
-```
-
-**⚡Update-ENV**
-```sh
-bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) update-env
 ```
 
 **🤝 Help**

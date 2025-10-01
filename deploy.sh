@@ -206,6 +206,10 @@ deploy() {
     # Start Supabase
     start_compose "supabase/docker-compose.supabase.yml" "supabase"
     wait_for_container "supabase"
+
+    # Start Supabase S3
+    start_compose "supabase/docker-compose.s3.supabase.yml" "supabase-s3"
+    wait_for_container "supabase"
     
     # Start n8n
     start_compose "n8n/docker-compose.n8n.yml" "n8n"
@@ -259,6 +263,7 @@ down() {
     # Stop all services (in reverse order)
     stop_service "typebot/docker-compose.typebot.yml" "typebot"
     stop_service "n8n/docker-compose.n8n.yml" "n8n"
+    stop_service "supabase/docker-compose.s3.supabase.yml" "supabase-s3"
     stop_service "supabase/docker-compose.supabase.yml" "supabase"
     stop_service "redis/docker-compose.redis.yml" "redis"
     stop_service "docker-compose.yml" "traefik"
@@ -339,6 +344,7 @@ up() {
     check_and_stop_container "docker-compose.yml" "traefik"
     check_and_stop_container "redis/docker-compose.redis.yml" "redis"
     check_and_stop_container "supabase/docker-compose.supabase.yml" "supabase"
+    check_and_stop_container "supabase/docker-compose.s3.supabase.yml" "supabase-s3"
     check_and_stop_container "n8n/docker-compose.n8n.yml" "n8n"
     check_and_stop_container "typebot/docker-compose.typebot.yml" "typebot"
     
@@ -365,6 +371,7 @@ up() {
     start_service "docker-compose.yml" "traefik"
     start_service "redis/docker-compose.redis.yml" "redis"
     start_service "supabase/docker-compose.supabase.yml" "supabase"
+    start_service "supabase/docker-compose.s3.supabase.yml" "supabase-s3"
     start_service "n8n/docker-compose.n8n.yml" "n8n"
     start_service "typebot/docker-compose.typebot.yml" "typebot"
     
@@ -411,6 +418,7 @@ restart() {
     restart_service "docker-compose.yml" "traefik"
     restart_service "redis/docker-compose.redis.yml" "redis"
     restart_service "supabase/docker-compose.supabase.yml" "supabase"
+    restart_service "supabase/docker-compose.s3.supabase.yml" "supabase-s3"
     restart_service "n8n/docker-compose.n8n.yml" "n8n"
     restart_service "typebot/docker-compose.typebot.yml" "typebot"
     
@@ -495,6 +503,7 @@ reset() {
     if [ -d "$REPO_DIR" ]; then
         force_cleanup_service "typebot/docker-compose.typebot.yml" "typebot"
         force_cleanup_service "n8n/docker-compose.n8n.yml" "n8n"
+        force_cleanup_service "supabase/docker-compose.s3.supabase.yml" "supabase-s3"
         force_cleanup_service "supabase/docker-compose.supabase.yml" "supabase"
         force_cleanup_service "redis/docker-compose.redis.yml" "redis"
         force_cleanup_service "docker-compose.yml" "traefik"
