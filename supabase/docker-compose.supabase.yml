@@ -4,7 +4,7 @@ services:
 
   studio:
     container_name: supabase-studio
-    image: supabase/studio:latest
+    image: supabase/studio:2025.06.30-sha-6f5982d
     restart: unless-stopped
     networks:
       - chatbot    
@@ -43,7 +43,7 @@ services:
 
   kong:
     container_name: supabase-kong
-    image: kong:latest
+    image: kong:2.8.1
     restart: unless-stopped
     networks:
       - chatbot  
@@ -70,7 +70,7 @@ services:
 
   auth:
     container_name: supabase-auth
-    image: supabase/gotrue:latest
+    image: supabase/gotrue:v2.177.0
     restart: unless-stopped
     networks:
       - chatbot  
@@ -124,7 +124,7 @@ services:
      
   rest:
     container_name: supabase-rest
-    image: postgrest/postgrest:latest
+    image: postgrest/postgrest:v12.2.12
     restart: unless-stopped
     networks:
       - chatbot    
@@ -148,7 +148,7 @@ services:
 
   realtime:
     container_name: realtime-dev.supabase-realtime
-    image: supabase/realtime:latest
+    image: supabase/realtime:v2.34.47
     restart: unless-stopped
     networks:
       - chatbot    
@@ -193,7 +193,7 @@ services:
 
   storage:
     container_name: supabase-storage
-    image: supabase/storage-api:latest
+    image: supabase/storage-api:v1.25.7
     restart: unless-stopped
     networks:
       - chatbot    
@@ -236,7 +236,7 @@ services:
 
   imgproxy:
     container_name: supabase-imgproxy
-    image: darthsim/imgproxy:latest
+    image: darthsim/imgproxy:v3.8.0
     restart: unless-stopped
     networks:
       - chatbot    
@@ -279,7 +279,7 @@ services:
 
   functions:
     container_name: supabase-edge-functions
-    image: supabase/edge-runtime:latest
+    image: supabase/edge-runtime:v1.69.6
     restart: unless-stopped
     networks:
       - chatbot    
@@ -304,7 +304,7 @@ services:
 
   analytics:
     container_name: supabase-analytics
-    image: supabase/logflare:latest
+    image: supabase/logflare:1.14.2
     restart: unless-stopped
     networks:
       - chatbot    
@@ -342,7 +342,7 @@ services:
 
   db:
     container_name: supabase-db
-    image: supabase/postgres:latest
+    image: supabase/postgres:15.8.1.060
     restart: unless-stopped
     networks:
       - chatbot  
@@ -393,7 +393,7 @@ services:
 
   vector:
     container_name: supabase-vector
-    image: timberio/vector:latest
+    image: timberio/vector:0.28.1-alpine
     restart: unless-stopped
     networks:
       - chatbot    
@@ -425,7 +425,7 @@ services:
 
   supavisor:
     container_name: supabase-pooler
-    image: supabase/supavisor:latest
+    image: supabase/supavisor:2.5.7
     restart: unless-stopped
     networks:
       - chatbot  
