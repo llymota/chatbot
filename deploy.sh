@@ -746,24 +746,58 @@ help() {
     echo -e "\n🚩  Usage: $0 [COMMAND]"
     echo ""
     echo "Commands:"
-    echo "  🔸  deploy         Run the full deployment (default)"
-    echo "  🔸  up, start      Start all services"
-    echo "  🔸  down, stop     Stop all services"
-    echo "  🔸  restart        Restart all services"
-    echo "  🔸  update-env     Update environment files"
-    echo "  🔸  reset          Reset all services"
-    echo "  🔸  help           Show this help message"
+    echo "  🔸  deploy             Run the full deployment (default)"
+    echo "  🔸  up, start          Start all services"
+    echo "  🔸  down, stop         Stop all services"
+    echo "  🔸  restart            Restart all services"
+    echo "  🔸  compress-volume    Compress Docker Volume to tar"
+    echo "  🔸  update-env         Update environment files"
+    echo "  🔸  reset              Reset all services"
+    echo "  🔸  help               Show this help message"
     echo ""
 }
 
-###   >>  Script execution starts here  <<   ###
+compress-volume() {
+    # Backup directory
+    BACKUP_DIR="./backups"
+    DATE=$(date +%d-%m-%Y)
+    
+    # Map volumes to backup file names
+    declare -A VOLUME_BACKUPS=(
+        ["n8n-data"]="n8n-backup-${DATE}.tar.gz"
+        ["redis-data"]="redis-backup-${DATE}.tar.gz"
+        ["db-config"]="supabase-backup-${DATE}.tar.gz"
+    )
+    
+    mkdir -p "$BACKUP_DIR"
+    
+    for VOLUME in "${!VOLUME_BACKUPS[@]}"; do
+        BACKUP_FILE="${BACKUP_DIR}/${VOLUME_BACKUPS[$VOLUME]}"
+        echo "⌛ Backing up Docker volume: $VOLUME → $BACKUP_FILE"
+        
+        docker run --rm \
+        -v ${VOLUME}:/volume \
+        -v $(pwd)/$BACKUP_DIR:/backup \
+        alpine \
+        sh -c "tar -czf /backup/$(basename $BACKUP_FILE) -C /volume ."
+        
+        if [ -f "$BACKUP_FILE" ]; then
+            echo "✅ Backup created: $BACKUP_FILE"
+        else
+            echo "⛔ Failed to back up volume: $VOLUME" >&2
+        fi
+    done
+}
 
+###   >>  Script execution starts here  <<   ###
 if [ $# -eq 0 ]; then
     deploy
     elif [ "$1" = "stop" ] || [ "$1" = "down" ]; then
     down
     elif [ "$1" = "up" ] || [ "$1" = "start" ]; then
     up
+    elif [ "$1" = "compress-volume" ]; then
+    compress-volume
     elif [ "$1" = "restart" ]; then
     restart
     elif [ "$1" = "update-env" ]; then

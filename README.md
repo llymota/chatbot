@@ -20,6 +20,11 @@ bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh)
 bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) down
 ```
 
+**🤏 Compress-Volume**
+```sh
+bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) compress-volume
+```
+
 **⚡Restart**
 ```sh
 bash <(curl -s https://raw.githubusercontent.com/llymota/chatbot/main/deploy.sh) restart
