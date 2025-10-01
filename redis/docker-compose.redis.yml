@@ -16,7 +16,9 @@ services:
       - chatbot
 
 volumes:
-  redis-data:      
+  redis-data:   
+    external: true
+    name: redis-data   
 
 networks:
   chatbot:

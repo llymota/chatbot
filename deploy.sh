@@ -112,6 +112,25 @@ deploy() {
         echo -e "\n✅  Docker network created\n"
     fi
     
+    # Volumes to create if they don't exist
+    VOLUMES=("redis-data" "n8n-data" "db-config")
+    
+    for VOLUME_NAME in "${VOLUMES[@]}"; do
+        if docker volume ls --format '{{.Name}}' | grep -qw "$VOLUME_NAME"; then
+            echo -e "✅  Docker volume '$VOLUME_NAME' already exists\n"
+        else
+            echo -e "⌛  Creating Docker volume '$VOLUME_NAME'...\n"
+            docker volume create "$VOLUME_NAME" > /dev/null
+            
+            if ! docker volume ls --format '{{.Name}}' | grep -qw "$VOLUME_NAME"; then
+                echo -e "⛔  Docker volume creation failed for '$VOLUME_NAME'\n" >&2
+                exit 1
+            fi
+            
+            echo -e "\n✅  Docker volume '$VOLUME_NAME' created\n"
+        fi
+    done
+    
     # Update or create ENV files for all services
     ENV_FILES=(
         "$REPO_DIR/.env"
@@ -145,7 +164,7 @@ deploy() {
     done
     
     echo -e "\n🚀  Starting all services...\n"
-
+    
     # Required Redis Configration
     echo 'vm.overcommit_memory = 1' | sudo tee -a /etc/sysctl.conf
     sudo sysctl -p
@@ -206,7 +225,7 @@ deploy() {
     # Start Supabase
     start_compose "supabase/docker-compose.supabase.yml" "supabase"
     wait_for_container "supabase"
-
+    
     # Start Supabase S3
     start_compose "supabase/docker-compose.s3.supabase.yml" "supabase-s3"
     wait_for_container "supabase"
