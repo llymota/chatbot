@@ -39,8 +39,8 @@ services:
     networks:
       - chatbot
     depends_on:
-      db:
-        condition: service_healthy
+      # db:
+      #   condition: service_healthy
       rest:
         condition: service_started
       imgproxy:
