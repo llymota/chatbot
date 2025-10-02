@@ -226,6 +226,16 @@ deploy() {
     start_compose "supabase/docker-compose.supabase.yml" "supabase"
     wait_for_container "supabase"
     
+    # Ensure n8n database exists
+    echo -e "🔎  Checking if 'n8n' database exists...\n"
+    if docker exec supabase-db psql -U postgres -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='n8n';" | grep -q 1; then
+        echo -e "✅  Database 'n8n' already exists\n"
+    else
+        echo -e "⌛  Creating 'n8n' database...\n"
+        docker exec supabase-db psql -U postgres -d postgres -c "CREATE DATABASE n8n;"
+        echo -e "✅  Database 'n8n' created successfully\n"
+    fi
+    
     # Start Supabase S3
     start_compose "supabase/docker-compose.s3.supabase.yml" "supabase-s3"
     wait_for_container "supabase"
