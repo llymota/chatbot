@@ -773,7 +773,7 @@ compress-volume() {
     
     for VOLUME in "${!VOLUME_BACKUPS[@]}"; do
         BACKUP_FILE="${BACKUP_DIR}/${VOLUME_BACKUPS[$VOLUME]}"
-        echo "⌛ Backing up Docker volume: $VOLUME → $BACKUP_FILE"
+        echo -e "\n⌛ Backing up Docker volume: $VOLUME → $BACKUP_FILE\n"
         
         docker run --rm \
         -v ${VOLUME}:/volume \
@@ -782,9 +782,9 @@ compress-volume() {
         sh -c "tar -czf /backup/$(basename $BACKUP_FILE) -C /volume ."
         
         if [ -f "$BACKUP_FILE" ]; then
-            echo "✅ Backup created: $BACKUP_FILE"
+            echo "✅ Backup created: $BACKUP_FILE\n"
         else
-            echo "⛔ Failed to back up volume: $VOLUME" >&2
+            echo "⛔ Failed to back up volume: $VOLUME\n" >&2
         fi
     done
 }
